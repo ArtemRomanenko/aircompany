@@ -1,4 +1,4 @@
-package Planes;
+package planes;
 
 import models.MilitaryType;
 
@@ -19,9 +19,7 @@ public class MilitaryPlane extends Plane{
 
     @Override
     public String toString() {
-        return super.toString().replace("}",
-                ", type=" + type +
-                '}');
+        return String.format("MilitaryPlane type = %s", type);
     }
 
     @Override
