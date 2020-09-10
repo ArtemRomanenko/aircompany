@@ -1,10 +1,12 @@
-import planes.ExperimentalPlane;
 import models.MilitaryType;
 import planes.MilitaryPlane;
 import planes.PassengerPlane;
 import planes.Plane;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class Airport {
     private List<? extends Plane> planes;
@@ -14,28 +16,18 @@ public class Airport {
     }
 
 
-    public List<PassengerPlane> getPassengerPlane() {
-        List<PassengerPlane> passengerPlanes = new ArrayList<>();
+    public List<? extends Plane> getPlaneByType(Class<? extends Plane> requestedPlane) {
+        List<Plane> sortedPlanes = new ArrayList<>();
         for (Plane plane : planes) {
-            if (plane instanceof PassengerPlane) {
-                passengerPlanes.add((PassengerPlane) plane);
+            if (plane.getClass().isAssignableFrom(requestedPlane)) {
+                sortedPlanes.add(plane);
             }
         }
-        return passengerPlanes;
-    }
-
-    public List<MilitaryPlane> getMilitaryPlanes() {
-        List<MilitaryPlane> militaryPlanes = new ArrayList<>();
-        for (Plane plane : planes) {
-            if (plane instanceof MilitaryPlane) {
-                militaryPlanes.add((MilitaryPlane) plane);
-            }
-        }
-        return militaryPlanes;
+        return sortedPlanes;
     }
 
     public PassengerPlane getPlaneWithMaxPassengersCapacity() {
-        List<PassengerPlane> passengerPlanes = getPassengerPlane();
+        List<PassengerPlane> passengerPlanes = (List<PassengerPlane>) getPlaneByType(PassengerPlane.class);
         PassengerPlane planeWithMaxCapacity = passengerPlanes.get(0);
         for (PassengerPlane passengerPlane : passengerPlanes) {
             if (passengerPlane.getPassengersCapacity() > planeWithMaxCapacity.getPassengersCapacity()) {
@@ -45,37 +37,15 @@ public class Airport {
         return planeWithMaxCapacity;
     }
 
-    public List<MilitaryPlane> getTransportMilitaryPlanes() {
-        List<MilitaryPlane> transportMilitaryPlanes = new ArrayList<>();
-        List<MilitaryPlane> militaryPlanes = getMilitaryPlanes();
+    public List<MilitaryPlane> getMilitaryPlanesType(MilitaryType militaryType) {
+        List<MilitaryPlane> MilitaryPlanesType = new ArrayList<>();
+        List<MilitaryPlane> militaryPlanes = (List<MilitaryPlane>) getPlaneByType(MilitaryPlane.class);
         for (MilitaryPlane plane : militaryPlanes) {
-            if (plane.getType() == MilitaryType.TRANSPORT) {
-                transportMilitaryPlanes.add(plane);
+            if (plane.getType() == militaryType) {
+                MilitaryPlanesType.add(plane);
             }
         }
-        return transportMilitaryPlanes;
-    }
-
-    public List<MilitaryPlane> getBomberMilitaryPlanes() {
-        List<MilitaryPlane> bomberMilitaryPlanes = new ArrayList<>();
-        List<MilitaryPlane> militaryPlanes = getMilitaryPlanes();
-        for (MilitaryPlane plane : militaryPlanes) {
-            if (plane.getType() == MilitaryType.BOMBER) {
-                bomberMilitaryPlanes.add(plane);
-            }
-        }
-        return bomberMilitaryPlanes;
-
-    }
-
-    public List<ExperimentalPlane> getExperimentalPlanes() {
-        List<ExperimentalPlane> experimentalPlanes = new ArrayList<>();
-        for (Plane plane : planes) {
-            if (plane instanceof ExperimentalPlane) {
-                experimentalPlanes.add((ExperimentalPlane) plane);
-            }
-        }
-        return experimentalPlanes;
+        return MilitaryPlanesType;
     }
 
     public Airport sortByMaxDistance() {
@@ -99,7 +69,7 @@ public class Airport {
     public Airport sortByMaxLoadCapacity() {
         planes.sort(new Comparator<Plane>() {
             public int compare(Plane o1, Plane o2) {
-                return o1.getMinLoadCapacity() - o2.getMinLoadCapacity();
+                return o1.getMaxLoadCapacity() - o2.getMaxLoadCapacity();
             }
         });
         return this;

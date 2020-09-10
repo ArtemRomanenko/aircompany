@@ -23,7 +23,8 @@ public class AirportTest {
 
     @Test
     public void getTransportMilitaryPlanes() {
-        List<MilitaryPlane> transportMilitaryPlanes = airport.getTransportMilitaryPlanes();
+        List<MilitaryPlane> transportMilitaryPlanes =
+                airport.getMilitaryPlanesType(MilitaryType.TRANSPORT);
         for (MilitaryPlane militaryPlane : transportMilitaryPlanes) {
             Assert.assertEquals(militaryPlane.getType(), MilitaryType.TRANSPORT);
         }
@@ -36,7 +37,7 @@ public class AirportTest {
     }
 
     @Test
-    public void test3() {
+    public void getPlaneWithMaxLoadCapacity() {
         airport.sortByMaxLoadCapacity();
         List<? extends Plane> planesSortedByMaxLoadCapacity = airport.getPlanes();
 
@@ -44,7 +45,7 @@ public class AirportTest {
         for (int i = 0; i < planesSortedByMaxLoadCapacity.size() - 1; i++) {
             Plane currentPlane = planesSortedByMaxLoadCapacity.get(i);
             Plane nextPlane = planesSortedByMaxLoadCapacity.get(i + 1);
-            if (currentPlane.getMinLoadCapacity() > nextPlane.getMinLoadCapacity()) {
+            if (currentPlane.getMaxLoadCapacity() > nextPlane.getMaxLoadCapacity()) {
                 nextPlaneMaxLoadCapacityIsHigherThanCurrent = false;
                 break;
             }
@@ -54,7 +55,7 @@ public class AirportTest {
 
     @Test
     public void isPlaneABomber() {
-        List<MilitaryPlane> bomberMilitaryPlanes = airport.getBomberMilitaryPlanes();
+        List<MilitaryPlane> bomberMilitaryPlanes = airport.getMilitaryPlanesType(MilitaryType.BOMBER);
         for (MilitaryPlane militaryPlane : bomberMilitaryPlanes) {
             Assert.assertEquals(militaryPlane.getType(), MilitaryType.BOMBER);
         }
@@ -62,7 +63,8 @@ public class AirportTest {
 
     @Test
     public void isPlaneClassified() {
-        List<ExperimentalPlane> experimentalPlanes = airport.getExperimentalPlanes();
+        List<ExperimentalPlane> experimentalPlanes
+                = (List<ExperimentalPlane>) airport.getPlaneByType(ExperimentalPlane.class);
         for (ExperimentalPlane experimentalPlane : experimentalPlanes) {
             Assert.assertNotEquals(experimentalPlane.getClassificationLevel(), ClassificationLevel.UNCLASSIFIED);
         }
